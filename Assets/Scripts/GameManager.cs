@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public SignalCenter SignalCenter { get; private set; }
+    public SignalCenter ShakeSignalCenter { get; private set; }
+    
 
     public PlayerHealth playerHealth;
     public PlayerCollision playerCollision;
@@ -22,12 +24,18 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         SignalCenter = new SignalCenter();
+        ShakeSignalCenter = new SignalCenter();
 
         playerHealth.Inject(SignalCenter);
-        playerCollision.Inject(SignalCenter);
         healthUI.Inject(SignalCenter);
-        playerShake.Inject(SignalCenter);
         platformColorChanger.Inject(SignalCenter);
+        playerShake.Inject(SignalCenter);
+        playerCollision.Inject(SignalCenter);
+        
+        //playerShake.Inject(ShakeSignalCenter);
+        //playerCollision.Inject(ShakeSignalCenter);
+        
+        
 
 
     }
