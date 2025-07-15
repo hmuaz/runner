@@ -3,6 +3,12 @@ using UnityEngine;
 public class PlatformColorChanger : MonoBehaviour
 {
     private Renderer rend;
+    private SignalCenter _signals;
+
+    public void Inject(SignalCenter signals)
+    {
+        _signals = signals;
+    }
 
     private void Awake()
     {
@@ -11,15 +17,17 @@ public class PlatformColorChanger : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerHit += ChangeColor;
+        if (_signals == null) return;
+        _signals.Subscribe<PlayerHitEvent>(OnPlayerHit);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerHit -= ChangeColor;
+        if (_signals == null) return;
+        _signals.Unsubscribe<PlayerHitEvent>(OnPlayerHit);
     }
 
-    private void ChangeColor()
+    private void OnPlayerHit(PlayerHitEvent _)
     {
         rend.material.color = Random.ColorHSV();
     }

@@ -3,18 +3,27 @@ using UnityEngine;
 
 public class HealthUI : MonoBehaviour
 {
+    private SignalCenter _signals;
+
+    public void Inject(SignalCenter signals)
+    {
+        _signals = signals;
+    }
+
     private void OnEnable()
     {
-        PlayerHealth.OnHealthChanged += UpdateUI;
+        if (_signals == null) return;
+        _signals.Subscribe<HealthChangedEvent>(UpdateUI);
     }
 
     private void OnDisable()
     {
-        PlayerHealth.OnHealthChanged -= UpdateUI;
+        if (_signals == null) return;
+        _signals.Unsubscribe<HealthChangedEvent>(UpdateUI);
     }
 
-    private void UpdateUI(int currentHealth)
+    private void UpdateUI(HealthChangedEvent evt)
     {
-        GetComponent<TextMeshProUGUI>().text = $"Health: {currentHealth}";
+        GetComponent<TextMeshProUGUI>().text = $"Health: {evt.health}";
     }
 }
