@@ -1,14 +1,19 @@
 using UnityEngine;
 using Zenject;
+using RunnerGame.Signals;
 
-public class PlayerCollision : MonoBehaviour
+namespace RunnerGame.Player
 {
-    [Inject] private SignalBus _signalBus;
-    private void OnTriggerEnter(Collider other)
+    public class PlayerCollision : MonoBehaviour
     {
-        if (other.CompareTag("Obstacle"))
+        [Inject] private SignalBus _signalBus;
+        private void OnTriggerEnter(Collider other)
         {
-            _signalBus.Fire(new PlayerHitSignal());
+            if (other.CompareTag("Obstacle"))
+            {
+                _signalBus.Fire(new PlayerHitSignal());
+            }
         }
     }
 }
+

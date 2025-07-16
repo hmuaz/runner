@@ -1,19 +1,27 @@
 using Zenject;
+using RunnerGame.Player;
+using RunnerGame.UI;
+using RunnerGame.Signals;
+using RunnerGame.Platform;
 
-public class GameInstaller : MonoInstaller
+namespace RunnerGame.Zenject
 {
-    public override void InstallBindings()
+    public class GameInstaller : MonoInstaller
     {
-        SignalBusInstaller.Install(Container);
+        public override void InstallBindings()
+        {
+            SignalBusInstaller.Install(Container);
         
-        Container.DeclareSignal<PlayerHitSignal>();
-        Container.DeclareSignal<HealthChangedSignal>();
+            Container.DeclareSignal<PlayerHitSignal>();
+            Container.DeclareSignal<HealthChangedSignal>();
         
-        Container.Bind<PlayerHealth>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<PlayerShake>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<HealthUI>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<PlayerCollision>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<PlatformColorChanger>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<PlayerHealth>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<PlayerShake>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<HealthUI>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<PlayerCollision>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<PlatformColorChanger>().FromComponentInHierarchy().AsSingle();
 
+        }
     }
 }
+

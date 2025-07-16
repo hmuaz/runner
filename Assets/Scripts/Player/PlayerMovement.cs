@@ -1,42 +1,51 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+namespace RunnerGame.Player
 {
-    public float sideSpeed = 5f;
-    public float clampX = 3f;
-    public float jumpForce = 5f;
-
-    private Rigidbody rb;
-    private bool isGrounded;
-
-    private void Awake()
+    [RequireComponent(typeof(Rigidbody))]
+    public sealed class PlayerMovement : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-    }
+        [SerializeField]
+        private float _sideSpeed = 5f;
 
-    private void Update()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        rb.MovePosition(rb.position + Vector3.right * (horizontal * sideSpeed * Time.deltaTime));
+        [SerializeField]
+        private float _clampX = 3f;
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        [SerializeField]
+        private float _jumpForce = 5f;
+
+        private Rigidbody _rigidbody;
+        private bool _isGrounded;
+
+        private void Awake()
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
+            _rigidbody = GetComponent<Rigidbody>();
         }
 
-        Vector3 pos = transform.position;
-        pos.x = Mathf.Clamp(pos.x, -clampX, clampX);
-        transform.position = pos;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
+        private void Update()
         {
-            isGrounded = true;
+            float horizontalInput = Input.GetAxis("Horizontal");
+
+            Vector3 moveDelta = Vector3.right * (horizontalInput * _sideSpeed * Time.deltaTime);
+            _rigidbody.MovePosition(_rigidbody.position + moveDelta);
+
+            if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+            {
+                _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                _isGrounded = false;
+            }
+
+            Vector3 clampedPosition = transform.position;
+            clampedPosition.x = Mathf.Clamp(clampedPosition.x, -_clampX, _clampX);
+            transform.position = clampedPosition;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                _isGrounded = true;
+            }
         }
     }
-    
 }

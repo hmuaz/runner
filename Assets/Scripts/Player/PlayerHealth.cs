@@ -1,26 +1,32 @@
 using System;
 using UnityEngine;
 using Zenject;
+using RunnerGame.Signals;
 
-public class PlayerHealth : MonoBehaviour
+namespace RunnerGame.Player
 {
-    [Inject] SignalBus _signalBus;
-    private int _health = 3;
-
-    private void OnEnable()
+    public class PlayerHealth : MonoBehaviour
     {
-        _signalBus.Subscribe<PlayerHitSignal>(ReduceHealth);
-    }
+        [Inject] SignalBus _signalBus;
+        private int _health = 3;
 
-    private void OnDisable()
-    {
-       _signalBus.Unsubscribe<PlayerHitSignal>(ReduceHealth);
-    }
+        private void OnEnable()
+        {
+            _signalBus.Subscribe<PlayerHitSignal>(ReduceHealth);
+        }
 
-    private void ReduceHealth()
-    {
-        _health--;
-        _signalBus.Fire(new HealthChangedSignal{health = _health});
+        private void OnDisable()
+        {
+            _signalBus.Unsubscribe<PlayerHitSignal>(ReduceHealth);
+        }
 
+        private void ReduceHealth()
+        {
+            _health--;
+            _signalBus.Fire(new HealthChangedSignal{health = _health});
+
+        }
     }
 }
+
+

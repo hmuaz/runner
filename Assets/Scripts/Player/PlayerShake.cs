@@ -1,22 +1,27 @@
 using UnityEngine;
 using Zenject;
+using RunnerGame.Signals;
 
-public class PlayerShake : MonoBehaviour
+namespace RunnerGame.Player
 {
-    [Inject] private SignalBus _signalBus;
-    private void OnEnable()
+    public class PlayerShake : MonoBehaviour
     {
-        _signalBus.Subscribe<PlayerHitSignal>(Shake);
-    }
+        [Inject] private SignalBus _signalBus;
+        private void OnEnable()
+        {
+            _signalBus.Subscribe<PlayerHitSignal>(Shake);
+        }
 
-    private void OnDisable()
-    {
-        _signalBus.Unsubscribe<PlayerHitSignal>(Shake);
+        private void OnDisable()
+        {
+            _signalBus.Unsubscribe<PlayerHitSignal>(Shake);
 
-    }
+        }
 
-    private void Shake()
-    {
-        LeanTween.moveX(gameObject, transform.position.x + 0.2f, 0.1f).setLoopPingPong(1);
+        private void Shake()
+        {
+            LeanTween.moveX(gameObject, transform.position.x + 0.2f, 0.1f).setLoopPingPong(1);
+        }
     }
 }
+
