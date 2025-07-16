@@ -1,25 +1,26 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 public class PlayerHealth : MonoBehaviour
 {
-    private int health = 3;
-    public static event Action<int> OnHealthChanged;
+    [Inject] SignalBus _signalBus;
+    private int _health = 3;
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerHit += ReduceHealth;
+        _signalBus.Subscribe<PlayerHitSignal>(ReduceHealth);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerHit -= ReduceHealth;
+       _signalBus.Unsubscribe<PlayerHitSignal>(ReduceHealth);
     }
 
     private void ReduceHealth()
     {
-        health--;
-        OnHealthChanged?.Invoke(health);
+        _health--;
+        _signalBus.Fire(new HealthChangedSignal{health = _health});
 
     }
 }

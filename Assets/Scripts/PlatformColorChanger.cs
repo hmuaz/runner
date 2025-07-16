@@ -1,26 +1,28 @@
 using UnityEngine;
+using Zenject;
 
 public class PlatformColorChanger : MonoBehaviour
 {
-    private Renderer rend;
+    [Inject] private SignalBus _signalBus;
+    private Renderer _renderer;
 
     private void Awake()
     {
-        rend = GetComponent<Renderer>();
+        _renderer = GetComponent<Renderer>();
     }
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerHit += ChangeColor;
+        _signalBus.Subscribe<PlayerHitSignal>(ChangeColor);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerHit -= ChangeColor;
+        _signalBus.Unsubscribe<PlayerHitSignal>(ChangeColor);
     }
 
     private void ChangeColor()
     {
-        rend.material.color = Random.ColorHSV();
+        _renderer.material.color = Random.ColorHSV();
     }
 }

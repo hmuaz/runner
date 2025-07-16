@@ -1,15 +1,18 @@
 using UnityEngine;
+using Zenject;
 
 public class PlayerShake : MonoBehaviour
 {
+    [Inject] private SignalBus _signalBus;
     private void OnEnable()
     {
-        GameEvents.OnPlayerHit += Shake;
+        _signalBus.Subscribe<PlayerHitSignal>(Shake);
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerHit -= Shake;
+        _signalBus.Unsubscribe<PlayerHitSignal>(Shake);
+
     }
 
     private void Shake()
